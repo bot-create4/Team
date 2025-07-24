@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zara Assistant - Terms and Conditions</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #0f0f0f;
+      color: #fff;
+      line-height: 1.6;
+    }
+
+    .header {
+      text-align: center;
+      padding: 2rem;
+      font-size: 2rem;
+      color: #00ffea;
+    }
+
+    .content {
+      padding: 1.5rem;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    svg {
+      width: 100%;
+      height: 200px;
+      stroke: #00ffea;
+      fill: none;
+      stroke-width: 3;
+      stroke-dasharray: 500;
+      stroke-dashoffset: 500;
+      transition: stroke-dashoffset 2s ease;
+    }
+
+    .animate {
+      stroke-dashoffset: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">📜 Zara Assistant - Terms & Conditions</div>
+
+  <svg id="scrollLine" viewBox="0 0 500 200">
+    <path d="M0,150 Q250,-100 500,150" />
+  </svg>
+
+  <div class="content">
+  <h3>Welcome to Zara Assistant!</h3>
+    <p>By using this assistant, you agree to follow the guidelines and not misuse the features for any illegal or abusive activity.</p>
+    
+    <h3>Usage Policy</h3>
+    <p>This AI assistant is provided for personal and educational purposes only.</p>
+
+    <h3>Privacy</h3>
+    <p>No personal data is stored or shared. All interactions are kept private and local unless integrated with third-party APIs.</p>
+
+    <h3>Modifications</h3>
+    <p>We reserve the right to update these terms at any time. Continued usage means you accept those changes.</p>
+
+    <p style="text-align:center; margin-top: 40px;">
+      Developed by 💻 Ransara Devnath<br>
+      © 2025 Zara Assistant
+    </p>
+  </div>
+
+  <script>
+    const svg = document.getElementById('scrollLine');
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY;
+      if (scrollTop > 50) {
+        svg.classList.add('animate');
+      }
+    });
+  </script>
+
+</body>
+</html>
