@@ -1,83 +1,640 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="si">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zara Assistant - Terms and Conditions</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #0f0f0f;
-      color: #fff;
-      line-height: 1.6;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Editor - Glitch Style</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/editor/editor.main.css">
 
-    .header {
-      text-align: center;
-      padding: 2rem;
-      font-size: 2rem;
-      color: #00ffea;
-    }
+    <style>
+        /* All CSS styles are now embedded here */
+        :root {
+            --bg-color: #1e1e1e;
+            --primary-color: #252526;
+            --secondary-color: #333333;
+            --text-color: #cccccc;
+            --accent-color: #007acc;
+            --border-color: #444444;
+            --glitch-pink: #ffadeb;
+            --glitch-green: #91f6c6;
+        }
 
-    .content {
-      padding: 1.5rem;
-      max-width: 800px;
-      margin: auto;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
 
-    svg {
-      width: 100%;
-      height: 200px;
-      stroke: #00ffea;
-      fill: none;
-      stroke-width: 3;
-      stroke-dasharray: 500;
-      stroke-dashoffset: 500;
-      transition: stroke-dashoffset 2s ease;
-    }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow: hidden;
+        }
 
-    .animate {
-      stroke-dashoffset: 0;
-    }
-  </style>
+        /* Loading Animation */
+        #loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease;
+        }
+
+        .loader {
+            border: 5px solid var(--secondary-color);
+            border-top: 5px solid var(--glitch-pink);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1.5s linear infinite;
+        }
+
+        #loader-overlay p {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: var(--glitch-green);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            padding: 0 20px;
+            height: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .project-name {
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--glitch-pink);
+        }
+
+        .user-menu {
+            position: relative;
+        }
+
+        .profile-icon {
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: var(--secondary-color);
+            min-width: 180px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 5px;
+        }
+
+        .dropdown-content a {
+            color: var(--text-color);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+        }
+        .dropdown-content a i {
+            margin-right: 10px;
+        }
+
+        .dropdown-content a:hover {
+            background-color: var(--accent-color);
+        }
+
+        .show {
+            display: block;
+        }
+
+        .content-area {
+            display: flex;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        .file-explorer {
+            width: 250px;
+            background-color: var(--primary-color);
+            border-right: 1px solid var(--border-color);
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .explorer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .explorer-header h4 {
+            font-size: 12px;
+            letter-spacing: 1px;
+            color: var(--glitch-green);
+        }
+
+        .explorer-actions button {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+
+        .file-tree {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+        .file-item, .folder-item {
+            padding: 6px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        .file-item:hover, .folder-item:hover {
+            background-color: var(--secondary-color);
+        }
+        .file-item.active {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        .folder-content {
+            padding-left: 20px;
+        }
+
+
+        .project-actions {
+            margin-top: 15px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+        }
+        .project-actions button {
+            width: 100%;
+            padding: 8px;
+            background-color: var(--secondary-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            cursor: pointer;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+        .project-actions button i {
+            margin-right: 8px;
+        }
+        .project-actions button:hover {
+            background-color: var(--accent-color);
+        }
+
+
+        .editor-section {
+            flex-grow: 1;
+            display: flex;
+            position: relative;
+        }
+
+        #editor-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .preview-controls {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            z-index: 10;
+        }
+        .preview-controls button {
+            background-color: var(--secondary-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            width: 35px;
+            height: 35px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .preview-controls button:hover {
+            background-color: var(--accent-color);
+        }
+        #toggle-preview-btn-mobile {
+            display: none;
+        }
+
+
+        .preview-pane {
+            width: 50%;
+            background-color: #ffffff;
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s ease;
+        }
+        .preview-header{
+            padding: 8px;
+            background-color: #f1f1f1;
+            color: #333;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        #preview-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Mobile responsive styles */
+        @media (max-width: 768px) {
+            .file-explorer {
+                position: absolute;
+                left: -100%;
+                z-index: 50;
+                height: calc(100vh - 50px);
+                transition: left 0.3s ease;
+            }
+            .preview-pane {
+                display: none; /* Hide side preview */
+            }
+            .preview-pane.mobile-visible {
+                display: flex;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 40;
+            }
+            #toggle-preview-btn-desktop {
+                display: none;
+            }
+            #toggle-preview-btn-mobile {
+                display: inline-block;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div id="loader-overlay">
+        <div class="loader"></div>
+        <p>Initializing Editor...</p>
+    </div>
 
-  <div class="header">📜 Zara Assistant - Terms & Conditions</div>
+    <div class="main-container">
+        <header>
+            <div class="project-name">
+                <i class="fas fa-bolt"></i>
+                <span>My-Awesome-Project</span>
+            </div>
+            <div class="user-menu">
+                <div id="profile-icon" class="profile-icon">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div id="dropdown-menu" class="dropdown-content">
+                    <a href="#" id="end-session"><i class="fas fa-sign-out-alt"></i> End My Session</a>
+                </div>
+            </div>
+        </header>
 
-  <svg id="scrollLine" viewBox="0 0 500 200">
-    <path d="M0,150 Q250,-100 500,150" />
-  </svg>
+        <div class="content-area">
+            <aside class="file-explorer">
+                <div class="explorer-header">
+                    <h4>FILES</h4>
+                    <div class="explorer-actions">
+                        <button id="new-file-btn" title="New File"><i class="fas fa-file-plus"></i></button>
+                        <button id="new-folder-btn" title="New Folder"><i class="fas fa-folder-plus"></i></button>
+                    </div>
+                </div>
+                <div id="file-tree" class="file-tree"></div>
+                 <div class="project-actions">
+                    <button id="download-zip-btn"><i class="fas fa-download"></i> Download Project</button>
+                    <button id="import-zip-btn"><i class="fas fa-upload"></i> Import Project</button>
+                    <input type="file" id="zip-importer" accept=".zip" style="display:none;">
+                </div>
+            </aside>
 
-  <div class="content">
-  <h3>Welcome to Zara Assistant!</h3>
-    <p>By using this assistant, you agree to follow the guidelines and not misuse the features for any illegal or abusive activity.</p>
+            <main class="editor-section">
+                <div id="editor-container"></div>
+                <div class="preview-controls">
+                    <button id="toggle-preview-btn-desktop" title="Toggle Fullscreen Preview"><i class="fas fa-expand"></i></button>
+                    <button id="toggle-preview-btn-mobile" title="Show Preview"><i class="fas fa-eye"></i></button>
+                </div>
+            </main>
+
+            <aside class="preview-pane">
+                 <div class="preview-header">
+                    <p>Live Preview</p>
+                </div>
+                <iframe id="preview-frame"></iframe>
+            </aside>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     
-    <h3>Usage Policy</h3>
-    <p>This AI assistant is provided for personal and educational purposes only.</p>
+    <script>
+        // All JavaScript is now embedded here
+        document.addEventListener('DOMContentLoaded', () => {
+            // DOM Elements
+            const fileTreeEl = document.getElementById('file-tree');
+            const newFileBtn = document.getElementById('new-file-btn');
+            const newFolderBtn = document.getElementById('new-folder-btn');
+            const editorContainer = document.getElementById('editor-container');
+            const previewFrame = document.getElementById('preview-frame');
+            const downloadZipBtn = document.getElementById('download-zip-btn');
+            const importZipBtn = document.getElementById('import-zip-btn');
+            const zipImporter = document.getElementById('zip-importer');
+            const loaderOverlay = document.getElementById('loader-overlay');
+            
+            // Desktop & Mobile Preview Toggles
+            const togglePreviewBtnDesktop = document.getElementById('toggle-preview-btn-desktop');
+            const previewPane = document.querySelector('.preview-pane');
+            const editorSection = document.querySelector('.editor-section');
+            const togglePreviewBtnMobile = document.getElementById('toggle-preview-btn-mobile');
+            
+            // Session Management
+            const profileIcon = document.getElementById('profile-icon');
+            const dropdownMenu = document.getElementById('dropdown-menu');
+            const endSessionBtn = document.getElementById('end-session');
 
-    <h3>Privacy</h3>
-    <p>No personal data is stored or shared. All interactions are kept private and local unless integrated with third-party APIs.</p>
 
-    <h3>Modifications</h3>
-    <p>We reserve the right to update these terms at any time. Continued usage means you accept those changes.</p>
+            let monacoEditor;
+            let activeFilePath = null;
+            let fileSystem = {};
 
-    <p style="text-align:center; margin-top: 40px;">
-      Developed by 💻 Ransara Devnath<br>
-      © 2025 Zara Assistant
-    </p>
-  </div>
+            // --- Monaco Editor Initialization ---
+            require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs' }});
+            require(['vs/editor/editor.main'], () => {
+                monacoEditor = monaco.editor.create(editorContainer, {
+                    value: `\n<html>\n  <head>\n    <link rel="stylesheet" href="style.css">\n  </head>\n  <body>\n    <h1>Hello, World!</h1>\n    <script src="script.js"><\/script>\n  </body>\n</html>`,
+                    language: 'html',
+                    theme: 'vs-dark',
+                    automaticLayout: true,
+                    wordWrap: 'on'
+                });
 
-  <script>
-    const svg = document.getElementById('scrollLine');
-    window.addEventListener('scroll', () => {
-      const scrollTop = window.scrollY;
-      if (scrollTop > 50) {
-        svg.classList.add('animate');
-      }
-    });
-  </script>
+                // Update preview and save on content change
+                monacoEditor.onDidChangeModelContent(() => {
+                    if (activeFilePath) {
+                        const file = findFile(activeFilePath);
+                        if(file) file.content = monacoEditor.getValue();
+                        saveFileSystem();
+                    }
+                    updatePreview();
+                });
 
+                // Load files from local storage or create default
+                loadFileSystem();
+                renderFileTree();
+                // Open index.html by default if it exists
+                if(findFile('index.html')) {
+                    openFile('index.html');
+                }
+                
+                // Hide loader after initialization
+                setTimeout(() => {
+                    loaderOverlay.style.opacity = '0';
+                    setTimeout(() => loaderOverlay.style.display = 'none', 500);
+                }, 1500);
+            });
+
+            // --- File System Logic ---
+
+            const defaultFileSystem = {
+                'index.html': { type: 'file', content: `<!DOCTYPE html>\n<html>\n<head>\n  <title>My Site</title>\n  <link rel="stylesheet" href="style.css">\n</head>\n<body>\n  <h1>Welcome!</h1>\n  <p>Edit this file to see live changes.</p>\n  <script src="script.js"><\/script>\n</body>\n</html>` },
+                'style.css': { type: 'file', content: `body {\n  font-family: sans-serif;\n  background-color: #f0f0f0;\n  color: #333;\n}` },
+                'script.js': { type: 'file', content: `console.log("Hello from my new project!");` }
+            };
+            
+            function findFile(path, fs = fileSystem) {
+                // Simplified; works for root level files for now
+                return fs[path];
+            }
+            
+            function loadFileSystem() {
+                const savedFS = localStorage.getItem('codeEditorFileSystem');
+                if (savedFS) {
+                    fileSystem = JSON.parse(savedFS);
+                } else {
+                    fileSystem = defaultFileSystem;
+                    saveFileSystem();
+                }
+            }
+
+            function saveFileSystem() {
+                localStorage.setItem('codeEditorFileSystem', JSON.stringify(fileSystem));
+            }
+
+            function renderFileTree() {
+                fileTreeEl.innerHTML = '';
+                Object.keys(fileSystem).sort().forEach(key => {
+                    const item = fileSystem[key];
+                    if (item.type === 'file') {
+                        const fileEl = document.createElement('div');
+                        fileEl.className = 'file-item';
+                        if(key === activeFilePath) {
+                            fileEl.classList.add('active');
+                        }
+                        fileEl.innerHTML = `<i class="fas fa-file-code"></i> ${key}`;
+                        fileEl.addEventListener('click', () => openFile(key));
+                        fileTreeEl.appendChild(fileEl);
+                    }
+                    // Add folder logic here if needed
+                });
+            }
+
+            function openFile(path) {
+                const file = findFile(path);
+                if (file && file.type === 'file') {
+                    activeFilePath = path;
+                    monacoEditor.setValue(file.content);
+                    const extension = path.split('.').pop();
+                    let language = 'plaintext';
+                    if (extension === 'html') language = 'html';
+                    if (extension === 'css') language = 'css';
+                    if (extension === 'js') language = 'javascript';
+                    monaco.editor.setModelLanguage(monacoEditor.getModel(), language);
+                    renderFileTree();
+                }
+            }
+
+            newFileBtn.addEventListener('click', () => {
+                const fileName = prompt("Enter new file name (e.g., page.html):");
+                if (fileName && !fileSystem[fileName]) {
+                    fileSystem[fileName] = { type: 'file', content: '' };
+                    saveFileSystem();
+                    renderFileTree();
+                    openFile(fileName);
+                } else if (fileName) {
+                    alert('A file with that name already exists.');
+                }
+            });
+
+            // --- Live Preview Logic ---
+            function updatePreview() {
+                // Find the content of the main files. Use empty string if not found.
+                const htmlContent = fileSystem['index.html'] ? fileSystem['index.html'].content : '';
+                let doc = new DOMParser().parseFromString(htmlContent, 'text/html');
+
+                // Find all linked stylesheets in the HTML
+                const linkedStylesheets = doc.querySelectorAll('link[rel="stylesheet"]');
+                let cssContent = '';
+                linkedStylesheets.forEach(link => {
+                    const href = link.getAttribute('href');
+                    if (fileSystem[href] && fileSystem[href].type === 'file') {
+                        cssContent += fileSystem[href].content + '\n';
+                    }
+                });
+
+                // Find all linked scripts in the HTML
+                const linkedScripts = doc.querySelectorAll('script[src]');
+                let jsContent = '';
+                linkedScripts.forEach(script => {
+                    const src = script.getAttribute('src');
+                    if (fileSystem[src] && fileSystem[src].type === 'file') {
+                        jsContent += fileSystem[src].content + '\n';
+                    }
+                });
+
+                // Create the full HTML for the iframe
+                const source = `
+                    <html>
+                        <head>
+                            <style>${cssContent}</style>
+                        </head>
+                        <body>
+                            ${htmlContent}
+                            <script>${jsContent}<\/script>
+                        </body>
+                    </html>
+                `;
+                
+                const blob = new Blob([source], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                previewFrame.src = url;
+            }
+
+            // --- ZIP Import/Export Logic ---
+            downloadZipBtn.addEventListener('click', () => {
+                const zip = new JSZip();
+                Object.keys(fileSystem).forEach(key => {
+                    zip.file(key, fileSystem[key].content);
+                });
+                zip.generateAsync({ type: 'blob' }).then(content => {
+                    saveAs(content, 'my-project.zip');
+                });
+            });
+
+            importZipBtn.addEventListener('click', () => zipImporter.click());
+
+            zipImporter.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    JSZip.loadAsync(file).then(zip => {
+                        const newFS = {};
+                        const promises = [];
+                        zip.forEach((relativePath, zipEntry) => {
+                            if (!zipEntry.dir) { // Ignore directories
+                                const promise = zipEntry.async('string').then(content => {
+                                    newFS[relativePath] = { type: 'file', content: content };
+                                });
+                                promises.push(promise);
+                            }
+                        });
+                        Promise.all(promises).then(() => {
+                            fileSystem = newFS;
+                            saveFileSystem();
+                            location.reload(); // Easiest way to re-initiate the editor
+                        });
+                    });
+                }
+            });
+
+            // --- UI/UX and Session Management ---
+            
+            // Desktop: Toggle fullscreen preview
+            togglePreviewBtnDesktop.addEventListener('click', () => {
+                if (previewPane.style.width === '100%') {
+                    previewPane.style.width = '50%';
+                    editorSection.style.width = '50%';
+                } else {
+                    previewPane.style.width = '100%';
+                    editorSection.style.width = '0%';
+                }
+            });
+
+            // Mobile: Show/hide preview overlay
+            togglePreviewBtnMobile.addEventListener('click', () => {
+                previewPane.classList.toggle('mobile-visible');
+                // Change icon based on visibility
+                const icon = togglePreviewBtnMobile.querySelector('i');
+                if(previewPane.classList.contains('mobile-visible')) {
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            });
+
+            // Profile dropdown
+            profileIcon.addEventListener('click', () => {
+                dropdownMenu.classList.toggle('show');
+            });
+
+            window.addEventListener('click', (event) => {
+                if (!event.target.matches('.profile-icon i')) {
+                    if (dropdownMenu.classList.contains('show')) {
+                        dropdownMenu.classList.remove('show');
+                    }
+                }
+            });
+
+            // End Session
+            endSessionBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (confirm('Are you sure you want to end your session? All your project data in this browser will be deleted.')) {
+                    localStorage.clear();
+                    location.reload();
+                }
+            });
+        });
+    </script>
 </body>
 </html>
