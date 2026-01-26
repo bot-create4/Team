@@ -1,639 +1,331 @@
 <!DOCTYPE html>
-<html lang="si">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Code Editor - Glitch Style</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/editor/editor.main.css">
+    <title>King RANUX Pro | The God of WhatsApp Automation</title>
+    <meta name="description" content="The most advanced WhatsApp automation bot. Ultra-fast downloader, AI auto-reply, and secure core system. Created by Mr. Ransara Devnath.">
+    <meta name="keywords" content="WhatsApp Bot, King Ranux, Sri Lanka Bot, WhatsApp Automation, AI Bot, Wa-Bot">
+    <meta property="og:title" content="King RANUX Pro - The God of WhatsApp Automation">
+    <meta property="og:description" content="Join the revolution of WhatsApp automation with King RANUX Pro.">
+    <meta property="og:image" content="https://raw.githubusercontent.com/ransara-devnath-ofc/-Bot-Accent-/refs/heads/main/King%20RANUX%20PRO%20Bot%20Images/king-ranux-pro-main-logo.png">
 
-    <style>
-        /* All CSS styles are now embedded here */
-        :root {
-            --bg-color: #1e1e1e;
-            --primary-color: #252526;
-            --secondary-color: #333333;
-            --text-color: #cccccc;
-            --accent-color: #007acc;
-            --border-color: #444444;
-            --glitch-pink: #ffadeb;
-            --glitch-green: #91f6c6;
-        }
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- AOS Animation CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Link to the new stylesheet -->
+    <link rel="stylesheet" href="style.css">
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            overflow: hidden;
-        }
-
-        /* Loading Animation */
-        #loader-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--bg-color);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            transition: opacity 0.5s ease;
-        }
-
-        .loader {
-            border: 5px solid var(--secondary-color);
-            border-top: 5px solid var(--glitch-pink);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1.5s linear infinite;
-        }
-
-        #loader-overlay p {
-            margin-top: 20px;
-            font-size: 1.2em;
-            color: var(--glitch-green);
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Main Layout */
-        .main-container {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-
-        header {
-            background-color: var(--primary-color);
-            padding: 0 20px;
-            height: 50px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border-color);
-            flex-shrink: 0;
-        }
-
-        .project-name {
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--glitch-pink);
-        }
-
-        .user-menu {
-            position: relative;
-        }
-
-        .profile-icon {
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            right: 0;
-            background-color: var(--secondary-color);
-            min-width: 180px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-            border-radius: 5px;
-        }
-
-        .dropdown-content a {
-            color: var(--text-color);
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            font-size: 14px;
-        }
-        .dropdown-content a i {
-            margin-right: 10px;
-        }
-
-        .dropdown-content a:hover {
-            background-color: var(--accent-color);
-        }
-
-        .show {
-            display: block;
-        }
-
-        .content-area {
-            display: flex;
-            flex-grow: 1;
-            overflow: hidden;
-        }
-
-        .file-explorer {
-            width: 250px;
-            background-color: var(--primary-color);
-            border-right: 1px solid var(--border-color);
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            flex-shrink: 0;
-        }
-
-        .explorer-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .explorer-header h4 {
-            font-size: 12px;
-            letter-spacing: 1px;
-            color: var(--glitch-green);
-        }
-
-        .explorer-actions button {
-            background: none;
-            border: none;
-            color: var(--text-color);
-            font-size: 16px;
-            cursor: pointer;
-            margin-left: 8px;
-        }
-
-        .file-tree {
-            flex-grow: 1;
-            overflow-y: auto;
-        }
-        .file-item, .folder-item {
-            padding: 6px 10px;
-            cursor: pointer;
-            border-radius: 3px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-        }
-        .file-item:hover, .folder-item:hover {
-            background-color: var(--secondary-color);
-        }
-        .file-item.active {
-            background-color: var(--accent-color);
-            color: white;
-        }
-        .folder-content {
-            padding-left: 20px;
-        }
-
-
-        .project-actions {
-            margin-top: 15px;
-            border-top: 1px solid var(--border-color);
-            padding-top: 15px;
-        }
-        .project-actions button {
-            width: 100%;
-            padding: 8px;
-            background-color: var(--secondary-color);
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            cursor: pointer;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            text-align: left;
-        }
-        .project-actions button i {
-            margin-right: 8px;
-        }
-        .project-actions button:hover {
-            background-color: var(--accent-color);
-        }
-
-
-        .editor-section {
-            flex-grow: 1;
-            display: flex;
-            position: relative;
-        }
-
-        #editor-container {
-            width: 100%;
-            height: 100%;
-        }
-
-        .preview-controls {
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            z-index: 10;
-        }
-        .preview-controls button {
-            background-color: var(--secondary-color);
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            width: 35px;
-            height: 35px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .preview-controls button:hover {
-            background-color: var(--accent-color);
-        }
-        #toggle-preview-btn-mobile {
-            display: none;
-        }
-
-
-        .preview-pane {
-            width: 50%;
-            background-color: #ffffff;
-            border-left: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            transition: width 0.3s ease;
-        }
-        .preview-header{
-            padding: 8px;
-            background-color: #f1f1f1;
-            color: #333;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        #preview-frame {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        /* Mobile responsive styles */
-        @media (max-width: 768px) {
-            .file-explorer {
-                position: absolute;
-                left: -100%;
-                z-index: 50;
-                height: calc(100vh - 50px);
-                transition: left 0.3s ease;
-            }
-            .preview-pane {
-                display: none; /* Hide side preview */
-            }
-            .preview-pane.mobile-visible {
-                display: flex;
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                z-index: 40;
-            }
-            #toggle-preview-btn-desktop {
-                display: none;
-            }
-            #toggle-preview-btn-mobile {
-                display: inline-block;
-            }
-        }
-    </style>
 </head>
-<body>
-    <div id="loader-overlay">
-        <div class="loader"></div>
-        <p>Initializing Editor...</p>
+<body class="bg-slate-900 text-slate-300">
+
+    <!-- Preloader (Simulated Boot Sequence) - Re-styled -->
+    <div id="preloader" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-900 transition-opacity duration-700">
+        <div class="w-16 h-16 mb-4">
+            <svg class="w-full h-full" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm0,18a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z" fill="currentColor" class="text-slate-700"/>
+                <path d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0-1.48-1.75,5,5,0,0,0-4.63-2.95A5.06,5.06,0,0,0,10.2,12.4a1.5,1.5,0,0,0,1.45,1.6,1.49,1.49,0,0,0,1.52-1.46A3.42,3.42,0,0,1,16.08,9.2,3.34,3.34,0,0,1,19.33,12a1.5,1.5,0,0,0,1.49,1.5a1.5,1.5,0,0,0,1.5-1.5A8,8,0,0,1,12,4Z" class="spinner-path" fill="currentColor"/>
+            </svg>
+        </div>
+        <div class="text-sky-400 font-mono text-sm tracking-wider">INITIALIZING SYSTEM...</div>
     </div>
 
-    <div class="main-container">
-        <header>
-            <div class="project-name">
-                <i class="fas fa-bolt"></i>
-                <span>My-Awesome-Project</span>
-            </div>
-            <div class="user-menu">
-                <div id="profile-icon" class="profile-icon">
-                    <i class="fas fa-user-circle"></i>
-                </div>
-                <div id="dropdown-menu" class="dropdown-content">
-                    <a href="#" id="end-session"><i class="fas fa-sign-out-alt"></i> End My Session</a>
-                </div>
-            </div>
-        </header>
+    <!-- Background Grid -->
+    <div class="fixed inset-0 z-0 pointer-events-none bg-grid-pattern"></div>
+    <div class="fixed inset-0 z-0 pointer-events-none bg-gradient-to-b from-slate-900 via-slate-900/80 to-slate-900"></div>
 
-        <div class="content-area">
-            <aside class="file-explorer">
-                <div class="explorer-header">
-                    <h4>FILES</h4>
-                    <div class="explorer-actions">
-                        <button id="new-file-btn" title="New File"><i class="fas fa-file-plus"></i></button>
-                        <button id="new-folder-btn" title="New Folder"><i class="fas fa-folder-plus"></i></button>
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed top-0 w-full z-40 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center space-x-3">
+                    <img src="https://raw.githubusercontent.com/ransara-devnath-ofc/-Bot-Accent-/refs/heads/main/King%20RANUX%20PRO%20Bot%20Images/king-ranux-pro-main-logo.png" alt="Logo" class="h-10 w-10 object-contain">
+                    <span class="text-xl font-bold tracking-wide text-slate-100">King RANUX Pro</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#home" class="nav-link">Home</a>
+                        <a href="#features" class="nav-link">Features</a>
+                        <a href="#deploy" class="nav-link">Deploy</a>
+                        <a href="#developer" class="nav-link">Developer</a>
                     </div>
                 </div>
-                <div id="file-tree" class="file-tree"></div>
-                 <div class="project-actions">
-                    <button id="download-zip-btn"><i class="fas fa-download"></i> Download Project</button>
-                    <button id="import-zip-btn"><i class="fas fa-upload"></i> Import Project</button>
-                    <input type="file" id="zip-importer" accept=".zip" style="display:none;">
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-slate-300 hover:text-white focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
                 </div>
-            </aside>
-
-            <main class="editor-section">
-                <div id="editor-container"></div>
-                <div class="preview-controls">
-                    <button id="toggle-preview-btn-desktop" title="Toggle Fullscreen Preview"><i class="fas fa-expand"></i></button>
-                    <button id="toggle-preview-btn-mobile" title="Show Preview"><i class="fas fa-eye"></i></button>
-                </div>
-            </main>
-
-            <aside class="preview-pane">
-                 <div class="preview-header">
-                    <p>Live Preview</p>
-                </div>
-                <iframe id="preview-frame"></iframe>
-            </aside>
+            </div>
         </div>
-    </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-800/80 backdrop-blur-lg border-t border-slate-700">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col">
+                <a href="#home" class="mobile-nav-link">Home</a>
+                <a href="#features" class="mobile-nav-link">Features</a>
+                <a href="#deploy" class="mobile-nav-link">Deploy</a>
+                <a href="#developer" class="mobile-nav-link">Developer</a>
+            </div>
+        </div>
+    </nav>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    
+    <!-- Hero Section -->
+    <section id="home" class="relative z-10 pt-32 pb-16 lg:pt-48 lg:pb-32 flex items-center justify-center min-h-screen">
+        <div class="absolute inset-0 -z-10 overflow-hidden">
+            <div class="absolute top-0 left-0 w-96 h-96 bg-sky-500/20 rounded-full filter blur-3xl opacity-30"></div>
+            <div class="absolute bottom-0 right-0 w-96 h-96 bg-violet-500/20 rounded-full filter blur-3xl opacity-30"></div>
+        </div>
+        <div class="container px-4 text-center">
+            <div data-aos="fade-down" class="inline-flex items-center px-4 py-1.5 mb-6 rounded-full border border-sky-500/20 bg-sky-500/10 backdrop-blur-sm">
+                <span class="w-2.5 h-2.5 rounded-full bg-green-400 mr-2.5"></span>
+                <span class="text-sm font-medium text-slate-200">System Online // Version 5.0.1</span>
+            </div>
+            
+            <h1 data-aos="zoom-in" class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 text-slate-100">
+                The Future of <br class="hidden md:block"/>
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-violet-400">
+                    WhatsApp Automation
+                </span>
+            </h1>
+
+            <p data-aos="fade-up" data-aos-delay="200" class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-slate-400 leading-relaxed">
+                Experience the most advanced and reliable WhatsApp bot, designed for speed, intelligence, and security.
+                <span class="text-xs text-slate-500 font-mono mt-2 block">CREATED BY 𝓜𝓡. 𝓡𝓪𝓷𝓼𝓪𝓻𝓪 𝓓𝓮𝓿𝓷𝓪𝓽𝓱</span>
+            </p>
+
+            <div data-aos="fade-up" data-aos-delay="400" class="mt-10 flex flex-col sm:flex-row justify-center items-center gap-4">
+                <a href="https://whatsapp.com/channel/0029Vb65oPr4dTnAzAsztH0Z" target="_blank" class="btn btn-primary">
+                    <i class="fa-brands fa-whatsapp mr-2"></i> Join Channel
+                </a>
+                <a href="https://github.com/ransara-devnath-ofc/King-RANUX-PRO-Official" target="_blank" class="btn btn-secondary">
+                    <i class="fa-brands fa-github mr-2"></i> View on GitHub
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="relative z-10 py-20 bg-slate-900/70 backdrop-blur-xl">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 data-aos="fade-up" class="text-3xl md:text-4xl font-bold mb-3 text-slate-100">Powerful Features, Seamlessly Integrated</h2>
+                <p data-aos="fade-up" data-aos-delay="100" class="text-slate-400 max-w-2xl mx-auto">King RANUX Pro is packed with tools to elevate your WhatsApp experience.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div data-aos="fade-up" data-aos-delay="100" class="feature-card group">
+                    <div class="feature-icon bg-sky-500/10 text-sky-400"><i class="fa-solid fa-download"></i></div>
+                    <h3 class="feature-title">Ultra Fast Downloader</h3>
+                    <p class="feature-description">Download media from YouTube, TikTok, Facebook, and more instantly without watermarks.</p>
+                </div>
+
+                <!-- Card 2 -->
+                <div data-aos="fade-up" data-aos-delay="200" class="feature-card group">
+                    <div class="feature-icon bg-violet-500/10 text-violet-400"><i class="fa-solid fa-robot"></i></div>
+                    <h3 class="feature-title">AI Auto Reply</h3>
+                    <p class="feature-description">Smart artificial intelligence that handles conversations automatically with human-like responses.</p>
+                </div>
+
+                <!-- Card 3 -->
+                <div data-aos="fade-up" data-aos-delay="300" class="feature-card group">
+                    <div class="feature-icon bg-emerald-500/10 text-emerald-400"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h3 class="feature-title">Anti-Delete & Privacy</h3>
+                    <p class="feature-description">View deleted messages and status updates instantly. Capture View Once media with ease.</p>
+                </div>
+
+                <!-- Card 4 -->
+                <div data-aos="fade-up" data-aos-delay="400" class="feature-card group">
+                     <div class="feature-icon bg-rose-500/10 text-rose-400"><i class="fa-solid fa-users-gear"></i></div>
+                    <h3 class="feature-title">Group Manager</h3>
+                    <p class="feature-description">Advanced tools to manage groups, kick users, tag all members, and maintain order effortlessly.</p>
+                </div>
+
+                <!-- Card 5 -->
+                <div data-aos="fade-up" data-aos-delay="500" class="feature-card group">
+                    <div class="feature-icon bg-amber-500/10 text-amber-400"><i class="fa-brands fa-google-drive"></i></div>
+                    <h3 class="feature-title">Cloud Integration</h3>
+                    <p class="feature-description">Seamlessly connects with Google Drive and MediaFire for file handling and storage solutions.</p>
+                </div>
+
+                <!-- Card 6 -->
+                <div data-aos="fade-up" data-aos-delay="600" class="feature-card group">
+                    <div class="feature-icon bg-indigo-500/10 text-indigo-400"><i class="fa-solid fa-bolt"></i></div>
+                    <h3 class="feature-title">Zero Latency</h3>
+                    <p class="feature-description">Optimized secure core loader ensures the bot runs 24/7 with zero lag and maximum uptime.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Deploy / Pairing Section -->
+    <section id="deploy" class="relative z-10 py-20">
+        <div class="container mx-auto px-4 max-w-3xl">
+            <h2 data-aos="fade-up" class="text-3xl md:text-4xl font-bold mb-3 text-center text-slate-100">Get Started in Seconds</h2>
+            <p data-aos="fade-up" data-aos-delay="100" class="text-slate-400 text-center mb-12">Pair your device using our secure servers to initialize the bot.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Server 1 Card -->
+                <div data-aos="fade-up" data-aos-delay="200" class="deploy-card">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="deploy-icon bg-sky-500/10 text-sky-400"><i class="fa-solid fa-server"></i></div>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-100">Pair Server 1</h3>
+                            <p class="text-xs text-slate-400">Primary Connection (Recommended)</p>
+                        </div>
+                    </div>
+                    <p class="text-slate-400 text-sm mb-6 flex-grow">Connect using our primary server for the fastest pairing experience. Ideal for most users.</p>
+                    <a href="https://king-ranux-pair-web.onrender.com" target="_blank" class="btn btn-secondary w-full"><i class="fa-solid fa-qrcode mr-2"></i> Get Pairing Code</a>
+                </div>
+                
+                <!-- Server 2 Card -->
+                <div data-aos="fade-up" data-aos-delay="300" class="deploy-card">
+                     <div class="flex items-center gap-4 mb-4">
+                        <div class="deploy-icon bg-violet-500/10 text-violet-400"><i class="fa-solid fa-database"></i></div>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-100">Pair Server 2</h3>
+                            <p class="text-xs text-slate-400">Backup Connection</p>
+                        </div>
+                    </div>
+                    <p class="text-slate-400 text-sm mb-6 flex-grow">Use this alternative server if the primary is busy. Ensures you can always connect.</p>
+                    <a href="https://king-ranux-pro-pair-server-2.onrender.com/" target="_blank" class="btn btn-secondary w-full"><i class="fa-solid fa-qrcode mr-2"></i> Get Pairing Code</a>
+                </div>
+            </div>
+
+            <div data-aos="fade-up" data-aos-delay="400" class="mt-12 p-4 bg-amber-500/10 border border-amber-500/20 rounded-lg flex items-start gap-4">
+                <i class="fa-solid fa-shield-halved text-amber-400 mt-1 text-xl"></i>
+                <div>
+                    <h4 class="font-bold text-amber-300">Your Security is Our Priority</h4>
+                    <p class="text-sm text-slate-400 mt-1">Never share your Session ID or verification codes with anyone. A legitimate developer will never ask for this information.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Developer Section -->
+    <section id="developer" class="relative z-10 py-20 bg-slate-900/70 backdrop-blur-xl">
+        <div class="container mx-auto px-4">
+             <div class="max-w-4xl mx-auto text-center">
+                 <img src="https://i.ibb.co/JjZSKTwj/IMG-20260125-WA0024.jpg" alt="Mr. Ransara Devnath" class="w-32 h-32 rounded-full mx-auto ring-4 ring-slate-700 object-cover shadow-lg mb-6" data-aos="zoom-in">
+
+                <p class="text-sky-400 font-medium tracking-widest text-sm mb-2 uppercase" data-aos="fade-up">The Creator</p>
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-100 mb-4" data-aos="fade-up" data-aos-delay="100">𝓜𝓡. 𝓡𝓪𝓷𝓼𝓪𝓻𝓪 𝓓𝓮𝓿𝓷𝓪𝓽𝓱</h2>
+                
+                <p class="text-slate-400 mb-10 max-w-2xl mx-auto leading-relaxed" data-aos="fade-up" data-aos-delay="200">
+                    A passionate Full-Stack Developer dedicated to building cutting-edge automation tools that solve real-world problems and push the boundaries of technology.
+                </p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4" data-aos="fade-up" data-aos-delay="300">
+                    <a href="https://wa.me/message/XQZHYHBQ3E47I1" target="_blank" class="contact-link group">
+                        <div class="contact-icon bg-emerald-500/10 text-emerald-400"><i class="fa-brands fa-whatsapp"></i></div>
+                        <div class="text-left">
+                            <div class="font-semibold text-slate-200">WhatsApp</div>
+                            <div class="text-xs text-slate-400">Chat directly</div>
+                        </div>
+                    </a>
+
+                    <a href="https://chat.whatsapp.com/DClxzLZvv96F5mCVBE1DFI" target="_blank" class="contact-link group">
+                        <div class="contact-icon bg-sky-500/10 text-sky-400"><i class="fa-solid fa-users"></i></div>
+                        <div class="text-left">
+                            <div class="font-semibold text-slate-200">Support Group</div>
+                            <div class="text-xs text-slate-400">Get 24/7 help</div>
+                        </div>
+                    </a>
+
+                    <a href="https://github.com/ransara-devnath-ofc" target="_blank" class="contact-link group">
+                        <div class="contact-icon bg-slate-600/20 text-slate-300"><i class="fa-brands fa-github"></i></div>
+                        <div class="text-left">
+                            <div class="font-semibold text-slate-200">GitHub</div>
+                            <div class="text-xs text-slate-400">See my code</div>
+                        </div>
+                    </a>
+
+                    <a href="tel:+94726880784" class="contact-link group">
+                        <div class="contact-icon bg-rose-500/10 text-rose-400"><i class="fa-solid fa-phone"></i></div>
+                        <div class="text-left">
+                            <div class="font-semibold text-slate-200">Contact</div>
+                            <div class="text-xs text-slate-400">+94 72 688 0784</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 bg-slate-900">
+        <div class="container mx-auto px-4 py-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center mb-4 md:mb-0">
+                    <img src="https://raw.githubusercontent.com/ransara-devnath-ofc/-Bot-Accent-/refs/heads/main/King%20RANUX%20PRO%20Bot%20Images/king-ranux-pro-main-logo.png" alt="Logo" class="h-8 w-8 mr-3 opacity-60">
+                    <span class="text-slate-400 font-semibold">King RANUX Pro</span>
+                </div>
+                 <div class="text-center">
+                    <p class="text-slate-500 text-sm">
+                        &copy; 2026 King RANUX Pro. All Rights Reserved.
+                    </p>
+                    <p class="text-xs text-slate-600 mt-1">
+                        Designed by 𝓜𝓡. 𝓡𝓪𝓷𝓼𝓪𝓻𝓪 𝓓𝓮𝓿𝓷𝓪𝓽𝓱
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        // All JavaScript is now embedded here
-        document.addEventListener('DOMContentLoaded', () => {
-            // DOM Elements
-            const fileTreeEl = document.getElementById('file-tree');
-            const newFileBtn = document.getElementById('new-file-btn');
-            const newFolderBtn = document.getElementById('new-folder-btn');
-            const editorContainer = document.getElementById('editor-container');
-            const previewFrame = document.getElementById('preview-frame');
-            const downloadZipBtn = document.getElementById('download-zip-btn');
-            const importZipBtn = document.getElementById('import-zip-btn');
-            const zipImporter = document.getElementById('zip-importer');
-            const loaderOverlay = document.getElementById('loader-overlay');
-            
-            // Desktop & Mobile Preview Toggles
-            const togglePreviewBtnDesktop = document.getElementById('toggle-preview-btn-desktop');
-            const previewPane = document.querySelector('.preview-pane');
-            const editorSection = document.querySelector('.editor-section');
-            const togglePreviewBtnMobile = document.getElementById('toggle-preview-btn-mobile');
-            
-            // Session Management
-            const profileIcon = document.getElementById('profile-icon');
-            const dropdownMenu = document.getElementById('dropdown-menu');
-            const endSessionBtn = document.getElementById('end-session');
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+            easing: 'ease-out-cubic'
+        });
 
-
-            let monacoEditor;
-            let activeFilePath = null;
-            let fileSystem = {};
-
-            // --- Monaco Editor Initialization ---
-            require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs' }});
-            require(['vs/editor/editor.main'], () => {
-                monacoEditor = monaco.editor.create(editorContainer, {
-                    value: `\n<html>\n  <head>\n    <link rel="stylesheet" href="style.css">\n  </head>\n  <body>\n    <h1>Hello, World!</h1>\n    <script src="script.js"><\/script>\n  </body>\n</html>`,
-                    language: 'html',
-                    theme: 'vs-dark',
-                    automaticLayout: true,
-                    wordWrap: 'on'
-                });
-
-                // Update preview and save on content change
-                monacoEditor.onDidChangeModelContent(() => {
-                    if (activeFilePath) {
-                        const file = findFile(activeFilePath);
-                        if(file) file.content = monacoEditor.getValue();
-                        saveFileSystem();
-                    }
-                    updatePreview();
-                });
-
-                // Load files from local storage or create default
-                loadFileSystem();
-                renderFileTree();
-                // Open index.html by default if it exists
-                if(findFile('index.html')) {
-                    openFile('index.html');
+        // Preloader Logic
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            setTimeout(() => {
+                if (preloader) {
+                    preloader.style.opacity = '0';
+                    setTimeout(() => {
+                        preloader.style.display = 'none';
+                    }, 700);
                 }
-                
-                // Hide loader after initialization
-                setTimeout(() => {
-                    loaderOverlay.style.opacity = '0';
-                    setTimeout(() => loaderOverlay.style.display = 'none', 500);
-                }, 1500);
-            });
+            }, 1000); // Simulate boot time
+        });
 
-            // --- File System Logic ---
+        // Mobile Menu Toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
 
-            const defaultFileSystem = {
-                'index.html': { type: 'file', content: `<!DOCTYPE html>\n<html>\n<head>\n  <title>My Site</title>\n  <link rel="stylesheet" href="style.css">\n</head>\n<body>\n  <h1>Welcome!</h1>\n  <p>Edit this file to see live changes.</p>\n  <script src="script.js"><\/script>\n</body>\n</html>` },
-                'style.css': { type: 'file', content: `body {\n  font-family: sans-serif;\n  background-color: #f0f0f0;\n  color: #333;\n}` },
-                'script.js': { type: 'file', content: `console.log("Hello from my new project!");` }
-            };
-            
-            function findFile(path, fs = fileSystem) {
-                // Simplified; works for root level files for now
-                return fs[path];
-            }
-            
-            function loadFileSystem() {
-                const savedFS = localStorage.getItem('codeEditorFileSystem');
-                if (savedFS) {
-                    fileSystem = JSON.parse(savedFS);
-                } else {
-                    fileSystem = defaultFileSystem;
-                    saveFileSystem();
-                }
-            }
-
-            function saveFileSystem() {
-                localStorage.setItem('codeEditorFileSystem', JSON.stringify(fileSystem));
-            }
-
-            function renderFileTree() {
-                fileTreeEl.innerHTML = '';
-                Object.keys(fileSystem).sort().forEach(key => {
-                    const item = fileSystem[key];
-                    if (item.type === 'file') {
-                        const fileEl = document.createElement('div');
-                        fileEl.className = 'file-item';
-                        if(key === activeFilePath) {
-                            fileEl.classList.add('active');
-                        }
-                        fileEl.innerHTML = `<i class="fas fa-file-code"></i> ${key}`;
-                        fileEl.addEventListener('click', () => openFile(key));
-                        fileTreeEl.appendChild(fileEl);
-                    }
-                    // Add folder logic here if needed
-                });
-            }
-
-            function openFile(path) {
-                const file = findFile(path);
-                if (file && file.type === 'file') {
-                    activeFilePath = path;
-                    monacoEditor.setValue(file.content);
-                    const extension = path.split('.').pop();
-                    let language = 'plaintext';
-                    if (extension === 'html') language = 'html';
-                    if (extension === 'css') language = 'css';
-                    if (extension === 'js') language = 'javascript';
-                    monaco.editor.setModelLanguage(monacoEditor.getModel(), language);
-                    renderFileTree();
-                }
-            }
-
-            newFileBtn.addEventListener('click', () => {
-                const fileName = prompt("Enter new file name (e.g., page.html):");
-                if (fileName && !fileSystem[fileName]) {
-                    fileSystem[fileName] = { type: 'file', content: '' };
-                    saveFileSystem();
-                    renderFileTree();
-                    openFile(fileName);
-                } else if (fileName) {
-                    alert('A file with that name already exists.');
-                }
-            });
-
-            // --- Live Preview Logic ---
-            function updatePreview() {
-                // Find the content of the main files. Use empty string if not found.
-                const htmlContent = fileSystem['index.html'] ? fileSystem['index.html'].content : '';
-                let doc = new DOMParser().parseFromString(htmlContent, 'text/html');
-
-                // Find all linked stylesheets in the HTML
-                const linkedStylesheets = doc.querySelectorAll('link[rel="stylesheet"]');
-                let cssContent = '';
-                linkedStylesheets.forEach(link => {
-                    const href = link.getAttribute('href');
-                    if (fileSystem[href] && fileSystem[href].type === 'file') {
-                        cssContent += fileSystem[href].content + '\n';
-                    }
-                });
-
-                // Find all linked scripts in the HTML
-                const linkedScripts = doc.querySelectorAll('script[src]');
-                let jsContent = '';
-                linkedScripts.forEach(script => {
-                    const src = script.getAttribute('src');
-                    if (fileSystem[src] && fileSystem[src].type === 'file') {
-                        jsContent += fileSystem[src].content + '\n';
-                    }
-                });
-
-                // Create the full HTML for the iframe
-                const source = `
-                    <html>
-                        <head>
-                            <style>${cssContent}</style>
-                        </head>
-                        <body>
-                            ${htmlContent}
-                            <script>${jsContent}<\/script>
-                        </body>
-                    </html>
-                `;
-                
-                const blob = new Blob([source], { type: 'text/html' });
-                const url = URL.createObjectURL(blob);
-                previewFrame.src = url;
-            }
-
-            // --- ZIP Import/Export Logic ---
-            downloadZipBtn.addEventListener('click', () => {
-                const zip = new JSZip();
-                Object.keys(fileSystem).forEach(key => {
-                    zip.file(key, fileSystem[key].content);
-                });
-                zip.generateAsync({ type: 'blob' }).then(content => {
-                    saveAs(content, 'my-project.zip');
-                });
-            });
-
-            importZipBtn.addEventListener('click', () => zipImporter.click());
-
-            zipImporter.addEventListener('change', (event) => {
-                const file = event.target.files[0];
-                if (file) {
-                    JSZip.loadAsync(file).then(zip => {
-                        const newFS = {};
-                        const promises = [];
-                        zip.forEach((relativePath, zipEntry) => {
-                            if (!zipEntry.dir) { // Ignore directories
-                                const promise = zipEntry.async('string').then(content => {
-                                    newFS[relativePath] = { type: 'file', content: content };
-                                });
-                                promises.push(promise);
-                            }
-                        });
-                        Promise.all(promises).then(() => {
-                            fileSystem = newFS;
-                            saveFileSystem();
-                            location.reload(); // Easiest way to re-initiate the editor
-                        });
-                    });
-                }
-            });
-
-            // --- UI/UX and Session Management ---
-            
-            // Desktop: Toggle fullscreen preview
-            togglePreviewBtnDesktop.addEventListener('click', () => {
-                if (previewPane.style.width === '100%') {
-                    previewPane.style.width = '50%';
-                    editorSection.style.width = '50%';
-                } else {
-                    previewPane.style.width = '100%';
-                    editorSection.style.width = '0%';
-                }
-            });
-
-            // Mobile: Show/hide preview overlay
-            togglePreviewBtnMobile.addEventListener('click', () => {
-                previewPane.classList.toggle('mobile-visible');
-                // Change icon based on visibility
-                const icon = togglePreviewBtnMobile.querySelector('i');
-                if(previewPane.classList.contains('mobile-visible')) {
-                    icon.classList.remove('fa-eye');
-                    icon.classList.add('fa-eye-slash');
-                } else {
-                    icon.classList.remove('fa-eye-slash');
-                    icon.classList.add('fa-eye');
-                }
-            });
-
-            // Profile dropdown
-            profileIcon.addEventListener('click', () => {
-                dropdownMenu.classList.toggle('show');
-            });
-
-            window.addEventListener('click', (event) => {
-                if (!event.target.matches('.profile-icon i')) {
-                    if (dropdownMenu.classList.contains('show')) {
-                        dropdownMenu.classList.remove('show');
-                    }
-                }
-            });
-
-            // End Session
-            endSessionBtn.addEventListener('click', (e) => {
+        // Add smooth scrolling for anchor links & close mobile menu
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                if (confirm('Are you sure you want to end your session? All your project data in this browser will be deleted.')) {
-                    localStorage.clear();
-                    location.reload();
+                if (!menu.classList.contains('hidden')) {
+                    menu.classList.add('hidden');
                 }
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
             });
+        });
+        
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
         });
     </script>
 </body>
